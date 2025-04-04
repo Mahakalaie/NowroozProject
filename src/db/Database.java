@@ -4,6 +4,7 @@ import db.exception.EntityNotFoundException;
 import db.exception.InvalidEntityException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Database {
@@ -26,12 +27,22 @@ public class Database {
 
     public static void add(Entity e) throws InvalidEntityException
     {
-        Validator validator = validators.get(e.getEntityCode());
-        validator.validate(e);
+        if(validators.containsKey(e.getEntityCode())) {
+            Validator validator = validators.get(e.getEntityCode());
+            validator.validate(e);
+        }
 
         e.id = ids;
 
         entities.add(e.copy());
+
+        Date addingToDatabaseMoment = new Date();
+
+        if(e instanceof Trackable)
+        {
+            ((Trackable) e).setCreationDate(addingToDatabaseMoment);
+            ((Trackable) e).setLastModificationDate(addingToDatabaseMoment);
+        }
 
         ids++ ;
     }
@@ -54,16 +65,25 @@ public class Database {
 
     public static void update(Entity e) throws InvalidEntityException
     {
-        Validator validator = validators.get(e.getEntityCode());
-        validator.validate(e);
+        if(validators.containsKey(e.getEntityCode())) {
+            Validator validator = validators.get(e.getEntityCode());
+            validator.validate(e);
+        }
 
         for(int i = 0; i < entities.size(); i++)
         {
-            if(entities.get(i).id == e.id)
-            {
-                entities.set(i, e.copy());
+            if(entities.get(i).id != e.id)
+                continue;;
+
+            entities.set(i, e.copy());
+
+            Date updateInDatabaseMoment = new Date();
+
+            if( !(e instanceof Trackable))
                 return;
-            }
+
+            ((Trackable) e).setLastModificationDate(updateInDatabaseMoment);
+            return;
         }
 
         throw new EntityNotFoundException();
