@@ -16,12 +16,12 @@ public class Task extends Entity implements Trackable {
 
     public static final int TASK_ENTITY_CODE = 1;
 
-    String title;
-    String description;
-    Date dueDate;
-    Status status;
-    Date creationDate;
-    Date lastModificationDate;
+    public String title;
+    public String description;
+    public Date dueDate;
+    public Status status;
+    private Date creationDate;
+    private Date lastModificationDate;
 
     public Task(String title, String description, Date dueDate, Status status)
     {
@@ -48,7 +48,7 @@ public class Task extends Entity implements Trackable {
     }
 
     @Override
-    public int getEntityCode() { return TASK_ENTITY_CODE }
+    public int getEntityCode() { return TASK_ENTITY_CODE; }
 
     @Override
     public void setCreationDate(Date date)
