@@ -9,19 +9,11 @@ public class Document extends Entity implements Trackable {
 
     public static final int DOCUMENT_ENTITY_CODE = 15;
 
-    private String content;
+    public String content;
     private Date creationDate;
     private Date lastModificationDate;
 
     public Document(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
         this.content = content;
     }
 
