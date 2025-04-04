@@ -4,6 +4,7 @@ import db.exception.EntityNotFoundException;
 import db.exception.InvalidEntityException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Database {
@@ -33,6 +34,14 @@ public class Database {
 
         entities.add(e.copy());
 
+        Date addingToDatabaseMoment = new Date();
+
+        if(e instanceof Trackable)
+        {
+            ((Trackable) e).setCreationDate(addingToDatabaseMoment);
+            ((Trackable) e).setLastModificationDate(addingToDatabaseMoment);
+        }
+
         ids++ ;
     }
 
@@ -59,11 +68,18 @@ public class Database {
 
         for(int i = 0; i < entities.size(); i++)
         {
-            if(entities.get(i).id == e.id)
-            {
-                entities.set(i, e.copy());
+            if(entities.get(i).id != e.id)
+                continue;;
+
+            entities.set(i, e.copy());
+
+            Date updateInDatabaseMoment = new Date();
+
+            if( !(e instanceof Trackable))
                 return;
-            }
+
+            ((Trackable) e).setLastModificationDate(updateInDatabaseMoment);
+            return;
         }
 
         throw new EntityNotFoundException();
