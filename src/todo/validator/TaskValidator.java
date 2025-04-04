@@ -6,7 +6,7 @@ import db.exception.InvalidEntityException;
 import example.Human;
 import todo.entity.Task;
 
-public class TaskValidator extends Validator {
+public class TaskValidator implements Validator {
 
     @Override
     public void validate(Entity entity) throws InvalidEntityException {
