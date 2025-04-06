@@ -73,7 +73,7 @@ public class Database {
         for(int i = 0; i < entities.size(); i++)
         {
             if(entities.get(i).id != e.id)
-                continue;;
+                continue;
 
             entities.set(i, e.copy());
 
