@@ -88,4 +88,19 @@ public class Database {
 
         throw new EntityNotFoundException();
     }
+
+    public static ArrayList<Entity> getAll(int entityCode) {
+
+        ArrayList<Entity> entitiesWithThisCode = new ArrayList<>();
+
+        for(int i = 0; i < entities.size(); i++)
+        {
+            if(entities.get(i).getEntityCode() != entityCode)
+                continue;
+
+            entitiesWithThisCode.add(entities.get(i));
+        }
+
+        return entitiesWithThisCode;
+    }
 }
