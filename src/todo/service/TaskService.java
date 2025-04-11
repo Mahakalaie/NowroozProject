@@ -10,9 +10,7 @@ import todo.entity.Task;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class TaskService {
 
@@ -239,6 +237,56 @@ public class TaskService {
         else{
             System.out.println(error);
         }
+    }
 
+    public static void getAllTasks() {
+
+        ArrayList<Entity> allTasks = Database.getAll(Task.TASK_ENTITY_CODE);
+        ArrayList<Task> allTasksSort = new ArrayList<>();
+
+        for(Entity entity : allTasks)
+        {
+            allTasksSort.add( (Task) entity);
+        }
+
+        Collections.sort(allTasksSort,
+                new Comparator<Task>() {
+                    @Override
+                    public int compare(Task o1, Task o2) {
+                        return o1.dueDate.compareTo(o2.dueDate);
+                    }
+                });
+
+        for(Task task : allTasksSort)
+        {
+            DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+
+            System.out.println("ID: " + task.id);
+            System.out.println("Title: " + task.title);
+            System.out.println("Description: " + task.description);
+            System.out.println("Due Date: " + dateformat.format(task.dueDate));
+            System.out.println("Status: " + task.status);
+
+            ArrayList<Entity> allSteps = Database.getAll(Step.STEP_ENTITY_CODE);
+
+            boolean isTheFirstStep = true;
+
+            for(Entity entity: allSteps)
+            {
+                Step step = (Step) entity;
+                int taskRef = step.taskRef;
+                if(taskRef != task.id)
+                    continue;
+
+                if(isTheFirstStep){
+                    System.out.println("Steps:");
+                    isTheFirstStep = false;
+                }
+
+                System.out.println("\t+ " + step.title + ":");
+                System.out.println("\t\tID: " + step.id);
+                System.out.println("\t\tStatus: " + step.status);
+            }
+        }
     }
 }
