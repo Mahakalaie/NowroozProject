@@ -62,7 +62,7 @@ public class TaskService {
         }
     }
 
-    public static void delete() throws InvalidEntityException {
+    public static void deleteTask(){
         String error = null;
 
         System.out.print("ID: ");
@@ -87,7 +87,107 @@ public class TaskService {
             System.out.println("Entity with ID=" + id + " successfully deleted.");
         }
         else {
-            System.out.println("Error: Something happend");
+            System.out.println("Error: " + error);
+        }
+    }
+
+    public static void updateTask() throws InvalidEntityException {
+        String error = null;
+
+        System.out.print("ID: ");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Field: ");
+        String field = scanner.nextLine();
+
+        System.out.print("New Value: ");
+        String newValue = scanner.nextLine();
+
+        try {
+            if( ! (Database.get(id) instanceof Task))
+                error = "there is no task with ID+" + id;
+        } catch (EntityNotFoundException e) {
+            error = "There is no entity with ID=" + id ;
+        }
+
+        Task task = null;
+        String oldValue = null;
+
+        if(error == null){
+
+            task = (Task) Database.get(id);
+
+            if("title".equalsIgnoreCase(field)){
+                oldValue = ((Task) Database.get(id)).title;
+
+                if(newValue == null || "".equals(newValue))
+                    error = "Task title cannot be empty.";
+
+                task.title = newValue;
+            }
+
+            else if("description".equalsIgnoreCase(field)){
+                oldValue = ((Task) Database.get(id)).description;
+
+                task.description = newValue;
+            }
+
+            else if("dueDate".equalsIgnoreCase(field)){
+                Date oldDueDate = ((Task) Database.get(id)).dueDate;
+
+                DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+                dateformat.setLenient(false);
+
+                oldValue = dateformat.format(oldDueDate);
+
+                try {
+                    task.dueDate = dateformat.parse(newValue);
+                } catch (ParseException e) {
+                    error = "Date format should be yyyy-mm-dd";
+                }
+            }
+
+            else if("status".equalsIgnoreCase(field)){
+                oldValue = ((Task) Database.get(id)).status.name();
+
+                try{
+                    task.status = Task.Status.valueOf(newValue);
+                } catch (IllegalArgumentException e) {
+                    error = "Invalid status, please check case and spelling.";
+                }
+            }
+
+            else{
+                error = "There is no such field.please check spelling.";
+            }
+        }
+
+        if(error == null) {
+            Database.update(task);
+            System.out.println("Successfully updated the task.");
+            System.out.println("Field: " + field);
+            System.out.println("Old Value: " + oldValue);
+            System.out.println("New Value: " + newValue);
+            System.out.println("Modification Date: " + task.getLastModificationDate());
+        }
+        else {
+            System.out.println("Cannot update task with ID=" + id + ".\nError: " + error);
+        }
+
+        if("status".equalsIgnoreCase(field) && error == null) {
+
+            if(((Task) Database.get(id)).status == Task.Status.Completed){
+
+                ArrayList<Entity> allSteps = Database.getAll(Step.STEP_ENTITY_CODE);
+
+                for(Entity entity: allSteps)
+                {
+                    int taskRef = ((Step) entity).taskRef;
+                    if(taskRef == id)
+                        ((Step) entity).status = Step.Status.Completed;
+                }
+
+            }
         }
     }
 }
