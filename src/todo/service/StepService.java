@@ -49,24 +49,10 @@ public class StepService {
         }
     }
 
-    public static void deleteStep() throws InvalidEntityException{
-        String error = null;
+    public static void deleteStep(int id) throws InvalidEntityException{
+        Database.delete(id);
 
-        System.out.print("ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
-
-        try {if(Database.get(id) instanceof Step)
-                Database.delete(id);
-        } catch (EntityNotFoundException e) {
-            error = "There is no entity with ID=" + id ;
-        }
-
-        if(error == null) {
-            System.out.println("Entity with ID=" + id + " successfully deleted.");
-        }
-        else {
-            System.out.println("Error: " + error);
-        }
+        System.out.println("Entity with ID=" + id + " successfully deleted.");
     }
 
     public static void updateStep() throws InvalidEntityException {

@@ -60,17 +60,9 @@ public class TaskService {
         }
     }
 
-    public static void deleteTask(){
-        String error = null;
+    public static void deleteTask(int id){
 
-        System.out.print("ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
-
-        try {if(Database.get(id) instanceof Task)
-            Database.delete(id);
-        } catch (EntityNotFoundException e) {
-            error = "There is no entity with ID=" + id ;
-        }
+        Database.delete(id);
 
         ArrayList<Entity> allSteps = Database.getAll(Step.STEP_ENTITY_CODE);
 
@@ -81,12 +73,7 @@ public class TaskService {
                 Database.delete(taskRef);
         }
 
-        if(error == null) {
-            System.out.println("Entity with ID=" + id + " successfully deleted.");
-        }
-        else {
-            System.out.println("Error: " + error);
-        }
+        System.out.println("Entity with ID=" + id + " successfully deleted.");
     }
 
     public static void updateTask() throws InvalidEntityException {

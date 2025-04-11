@@ -60,7 +60,7 @@ public class Database {
 
     public static void delete(int id)
     {
-        entities.remove(get(id));
+        entities.removeIf(entity -> entity.id == id);
     }
 
     public static void update(Entity e) throws InvalidEntityException
