@@ -60,7 +60,7 @@ public class Database {
 
     public static void delete(int id)
     {
-        entities.remove(get(id));
+        entities.removeIf(entity -> entity.id == id);
     }
 
     public static void update(Entity e) throws InvalidEntityException
@@ -73,7 +73,7 @@ public class Database {
         for(int i = 0; i < entities.size(); i++)
         {
             if(entities.get(i).id != e.id)
-                continue;;
+                continue;
 
             entities.set(i, e.copy());
 
@@ -87,5 +87,20 @@ public class Database {
         }
 
         throw new EntityNotFoundException();
+    }
+
+    public static ArrayList<Entity> getAll(int entityCode) {
+
+        ArrayList<Entity> entitiesWithThisCode = new ArrayList<>();
+
+        for(int i = 0; i < entities.size(); i++)
+        {
+            if(entities.get(i).getEntityCode() != entityCode)
+                continue;
+
+            entitiesWithThisCode.add(entities.get(i));
+        }
+
+        return entitiesWithThisCode;
     }
 }

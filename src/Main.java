@@ -1,35 +1,68 @@
 import db.Database;
+import db.exception.EntityNotFoundException;
 import db.exception.InvalidEntityException;
 import example.Document;
+import todo.entity.Step;
+import todo.entity.Task;
+import todo.service.StepService;
+import todo.service.TaskService;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws InvalidEntityException {
-        Document doc = new Document("Eid Eid Eid");
 
-        Database.add(doc);
+        Scanner scanner = new Scanner(System.in);
+        String command = scanner.nextLine();
 
-        System.out.println("Document added");
+        while ( ! command.equalsIgnoreCase("exit"))
+        {
+            if(command.equalsIgnoreCase("add task"))
+                TaskService.addTask();
 
-        System.out.println("id: " + doc.id);
-        System.out.println("content: " + doc.content);
-        System.out.println("creation date: " + doc.getCreationDate());
-        System.out.println("last modification date: " + doc.getLastModificationDate());
-        System.out.println();
+            else if(command.equalsIgnoreCase("add step"))
+                StepService.addStep();
 
-        try {
-            Thread.sleep(30_000);
-        } catch (InterruptedException e) {
-            System.out.println("Sleep interrupted!");
+            else if(command.equalsIgnoreCase("delete")) {
+
+                System.out.print("ID: ");
+                int id = Integer.parseInt(scanner.nextLine());
+
+                try {
+                    if(Database.get(id) instanceof Task)
+                        TaskService.deleteTask(id);
+                    else if(Database.get(id) instanceof Step)
+                        StepService.deleteStep(id);
+                } catch (EntityNotFoundException e) {
+                    System.out.println("Error: " + "There is no entity with ID=" + id);
+                }
+            }
+
+            else if(command.equalsIgnoreCase("update task")) {
+                TaskService.updateTask();
+            }
+
+            else if(command.equalsIgnoreCase("update step")) {
+                StepService.updateStep();
+            }
+
+            else if(command.equalsIgnoreCase("get task-by-id")) {
+                TaskService.getTaskByID();
+            }
+
+            else if(command.equalsIgnoreCase("get all-tasks")) {
+                TaskService.getAllTasks();
+            }
+
+            else if(command.equalsIgnoreCase("get incomplete-tasks")) {
+                TaskService.getIncompleteTasks();
+            }
+
+            else {
+                System.out.println("Invalid command.");
+            }
+
+            command = scanner.nextLine();
         }
-
-        doc.content = "This is the new content";
-
-        Database.update(doc);
-
-        System.out.println("Document updated");
-        System.out.println("id: " + doc.id);
-        System.out.println("content: " + doc.content);
-        System.out.println("creation date: " + doc.getCreationDate());
-        System.out.println("last modification date: " + doc.getLastModificationDate());
     }
 }
