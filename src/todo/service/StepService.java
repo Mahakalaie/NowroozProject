@@ -46,4 +46,24 @@ public class StepService {
             System.out.println("Cannot save step.\nError: " + error);
         }
     }
+
+    public static void delete() throws InvalidEntityException{
+        String error = null;
+
+        System.out.print("ID: ");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        try {if(Database.get(id) instanceof Step)
+                Database.delete(id);
+        } catch (EntityNotFoundException e) {
+            error = "There is no entity with ID=" + id ;
+        }
+
+        if(error == null) {
+            System.out.println("Entity with ID=" + id + " successfully deleted.");
+        }
+        else {
+            System.out.println("Error: Something happend");
+        }
+    }
 }
