@@ -190,4 +190,55 @@ public class TaskService {
             }
         }
     }
+
+    public static void getTaskByID() {
+        String error = null;
+
+        System.out.print("ID: ");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        try {
+            if( ! (Database.get(id) instanceof Task))
+                error = "cannot find task with ID=" + id;
+        } catch (EntityNotFoundException e) {
+            error = "can not find entity with ID=" + id ;
+        }
+
+        if(error == null){
+            Task task = (Task) Database.get(id);
+
+            DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+
+            System.out.println("ID: " + id);
+            System.out.println("Title: " + task.title);
+            System.out.println("Description: " + task.description);
+            System.out.println("Due Date: " + dateformat.format(task.dueDate));
+            System.out.println("Status: " + task.status);
+
+            ArrayList<Entity> allSteps = Database.getAll(Step.STEP_ENTITY_CODE);
+
+            boolean isTheFirstStep = true;
+
+            for(Entity entity: allSteps)
+            {
+                Step step = (Step) entity;
+                int taskRef = step.taskRef;
+                if(taskRef != id)
+                    continue;
+
+                if(isTheFirstStep){
+                    System.out.println("Steps:");
+                    isTheFirstStep = false;
+                }
+
+                System.out.println("\t+ " + step.title + ":");
+                System.out.println("\t\tID: " + step.id);
+                System.out.println("\t\tStatus: " + step.status);
+            }
+        }
+        else{
+            System.out.println(error);
+        }
+
+    }
 }
