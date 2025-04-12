@@ -75,15 +75,12 @@ public class Database {
             if(entities.get(i).id != e.id)
                 continue;
 
-            entities.set(i, e.copy());
-
             Date updateInDatabaseMoment = new Date();
 
-            if( !(e instanceof Trackable))
-                return;
+            if( e instanceof Trackable)
+                ((Trackable) e).setLastModificationDate(updateInDatabaseMoment);
 
-            ((Trackable) e).setLastModificationDate(updateInDatabaseMoment);
-            return;
+            entities.set(i, e.copy());
         }
 
         throw new EntityNotFoundException();
