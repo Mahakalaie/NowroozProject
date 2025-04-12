@@ -12,6 +12,12 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws InvalidEntityException {
 
+        TaskValidator taskValidator = new TaskValidator();
+        StepValidator stepValidator = new StepValidator();
+
+        Database.registerValidator(Task.TASK_ENTITY_CODE, taskValidator);
+        Database.registerValidator(Step.STEP_ENTITY_CODE, stepValidator);
+        
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
 
