@@ -34,8 +34,6 @@ public class Database {
 
         e.id = ids;
 
-        entities.add(e.copy());
-
         Date addingToDatabaseMoment = new Date();
 
         if(e instanceof Trackable)
@@ -43,7 +41,9 @@ public class Database {
             ((Trackable) e).setCreationDate(addingToDatabaseMoment);
             ((Trackable) e).setLastModificationDate(addingToDatabaseMoment);
         }
-
+        
+        entities.add(e.copy());
+        
         ids++ ;
     }
 
